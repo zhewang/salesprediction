@@ -1,5 +1,6 @@
 from twython import Twython
 import pickle
+import argparse
 from multiprocessing import Pool
 
 def GetTimeline(user_id):
@@ -33,12 +34,20 @@ def GetTimeline(user_id):
 def FetchData(id_list):
 
     # read id list
-    ids = ['hp','eBay']
+    ids = []
+    for uid in open(id_list,'r').read().splitlines() :
+        ids.append(uid)
+
+    # print(ids)
 
     # prepare process pool for multiprocess computing
     pool = Pool(10)
     pool.map(GetTimeline, ids)
 
 if __name__ == '__main__':
-    FetchData('test')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('listfile', help='List of IDs')
+    args = parser.parse_args()
+
+    FetchData(args.listfile)
 
