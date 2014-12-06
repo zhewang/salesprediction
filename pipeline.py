@@ -63,13 +63,14 @@ def ExtractImageTag(image_url):
 def ProcessTweet(tweet):
 
     # ExtractEntity(tweet['text'])
-    kewwords = ExtractKeyword(tweet['text'])
+    keywords = ExtractKeyword(tweet['text'])
     print(kewwords)
     # ExtractTaxonomy(demo_text)
     # ExtractImageTag(image_url)
 
-    for item in GetSearchResults(keywords):
-        print(item)
+    # Search on ebay for sales data
+    if len(keywords) > 0:
+        SearchEbay(keywords)
 
 
 if __name__ == '__main__':
