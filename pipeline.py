@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-
-# from __future__ import print_function
-from alchemyapi import AlchemyAPI
 import json
 import os
 import pickle
 import ebayapi
 import glob
-
+from multiprocessing import Pool
+from alchemyapi import AlchemyAPI
 
 def ExtractEntity(text):
     # Create the AlchemyAPI Object
@@ -71,21 +68,25 @@ def ProcessTweet(tweet):
     # ExtractTaxonomy(demo_text)
     # ExtractImageTag(image_url)
 
+    for item in GetSearchResults(keywords):
+        print(item)
+
 
 if __name__ == '__main__':
     
     dataPath = "./data/"    
+
+    pool = Pool(10)
     files = glob.glob(dataPath+"*.t")
     # print(files)
     for f in files:
         tweets = pickle.load(open(f, 'rb'))
-        for t in tweets:
-            ProcessTweet(t)
+        pool.map_async(ProcessTweet, tweets)
+        # for t in tweets:
+            # ProcessTweet(t)
             # print(t['created_at'])
             # print(t['retweet_count'])
             # print(t['text'].encode('utf-8'))
 
-
-
-
-
+    pool.close()
+    pool.join()
