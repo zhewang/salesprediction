@@ -46,9 +46,7 @@ def GetSalesData(item_url):
 
         print(len(sales_list))
 
-if __name__ == '__main__':
-    keywords = ['olay']
-
+def SearchEbay(keywords):
     item_urls = GetSearchResults(keywords)
 
     # Sequential
@@ -60,4 +58,10 @@ if __name__ == '__main__':
     pool.map_async(GetSalesData, item_urls)
     pool.close()
     pool.join()
+
+if __name__ == '__main__':
+    keywords = ['olay']
+    SearchEbay(keywords)
+
+    
    
