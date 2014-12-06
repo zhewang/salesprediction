@@ -25,9 +25,8 @@ Then use `fetch_twitter.py` to get data and save to file:
 
 `$ python fetch_twitter.py sample_list.txt`
 
-##Extract Keywords
+##Run the pipeline
 
-##Search on ebay
 
 [beautifulSoup]:http://beautiful-soup-4.readthedocs.org/en/latest/#
 [twython]:https://twython.readthedocs.org/en/latest/
