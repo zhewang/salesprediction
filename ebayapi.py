@@ -10,48 +10,54 @@ headers = {
 def GetSearchResults(keywords):
     kwd_str = '+'.join(keywords)
 
-    response = requests.get('http://www.ebay.com/sch/i.html?_nkw='+kwd_str+'&_sacat=0&rt=nc&LH_BIN=1', headers=headers)
+    response = requests.get('http://www.ebay.com/sch/i.html?_from=R40&_nkw='+kwd_str+'&_sacat=0&rt=nc&LH_BIN=1&_sop=12', headers=headers)
+    # response = requests.get('http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&LH_BIN=1&_nkw=apple+iphone+5s&_sop=12', headers=headers)
     soup = BeautifulSoup(response.text.encode('utf-8'))
 
-    viewer = soup.find(id='ListViewInner')
-    results = []
+    temp = open("temp.html", 'wb')
+    temp.write(response.text.encode('utf-8'))
 
-    if viewer != None:
-        for li in viewer.find_all('li', class_='sresult lvresult clearfix li'):
-            # print(li.find('a')['href'])
-            results.append(li.find('a')['href'])
+    # viewer = soup.find(id='ListViewInner')
+    # results = []
+
+    # if viewer != None:
+    #     for li in viewer.find_all('li', attrs={"_sp": "p2045573.m1686.l2058"}):
+    #         # print(li.find('a')['href'])
+    #         results.append(li.find('a')['href'])
+
+    results = []
+    for li in soup.find_all('li', id=re.compile(r"^item*")):
+        results.append(li.find('a')['href'])
 
     return results
 
-def GetSalesPage(item_url):    
+def GetSalesData(item_url):    
     response = requests.get(item_url, headers=headers)
     soup = BeautifulSoup(response.text.encode('utf-8'))
 
     sales_data = soup.find('a', href = re.compile(r'http://offer.ebay.com/ws/eBayISAPI.dll\?ViewBidsLogin/*'))
 
-    print(item_url)
     if sales_data == None:
         print("No salse data.")
     else:
-        GetSalesData(sales_data['href'])
+        response = requests.get(sales_data['href'], headers=headers)
+        soup = BeautifulSoup(response.text.encode('utf-8'))
+        sales_list = soup.find_all('tr', attrs={"bgcolor":  re.compile(r"^(#ffffff|#f2f2f2)$")})
 
-def GetSalesData(sales_url):
-    response = requests.get(sales_url, headers=headers)
-    soup = BeautifulSoup(response.text.encode('utf-8'))
-    sales_list = soup.find_all('tr', attrs={"bgcolor":  re.compile(r"^(#ffffff|#f2f2f2)$")})
-
-    print(len(sales_list))
+        print(len(sales_list))
 
 if __name__ == '__main__':
-    keywords = ['apple','iphone','5s']
-
-    # for item in GetSearchResults(keywords):
-        # print(item)
+    keywords = ['olay']
 
     item_urls = GetSearchResults(keywords)
 
+    # Sequential
+    # for url in item_urls:
+        # GetSalesData(url)
+
+    # parallel
     pool = Pool(10)
-    pool.map_async(GetSalesPage, item_urls)
+    pool.map_async(GetSalesData, item_urls)
     pool.close()
     pool.join()
    
