@@ -26,7 +26,7 @@ def GetTimeline(user_id):
     #     print(i['user']['screen_name'])
     #     print("-------------------")
 
-    saveFile = open('./data/'+user_id,'wb')
+    saveFile = open('./data/'+user_id+'.t','wb')
     pickle.dump(results, saveFile)
     saveFile.close()
 
