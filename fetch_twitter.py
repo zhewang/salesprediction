@@ -46,7 +46,9 @@ def FetchData(id_list):
 
     # prepare process pool for multiprocess computing
     pool = Pool(10)
-    pool.map(GetTimeline, ids)
+    pool.map_async(GetTimeline, ids)
+    pool.close()
+    pool.join()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
