@@ -4,7 +4,7 @@ Predict sales by analyzing social network data.
 
 Install
 ===============
-The code is implemented using **Python 3**. You need install [BeautifulSoup][beautifulSoup] and [Twython][twython]:
+The code is implemented using **Python 3**. You also need to install [BeautifulSoup][beautifulSoup] and [Twython][twython]:
 
 `$ pip install beautifulsoup4`
 
