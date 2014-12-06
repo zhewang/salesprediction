@@ -1,7 +1,8 @@
-from twython import Twython
 import pickle
 import argparse
+import os
 from multiprocessing import Pool
+from twython import Twython
 
 def GetTimeline(user_id):
     # prepare twitter connection
@@ -39,6 +40,9 @@ def FetchData(id_list):
         ids.append(uid)
 
     # print(ids)
+
+    if os.path.isdir('./data')==False:
+        os.mkdir('./data')
 
     # prepare process pool for multiprocess computing
     pool = Pool(10)
