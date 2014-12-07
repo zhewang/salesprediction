@@ -65,10 +65,8 @@ def ProcessTweet(tweet):
     tweet_dir = './data/'+tweet['user']['screen_name']+'/'+tweet['id_str']
     if os.path.isdir(tweet_dir) == False:
         os.mkdir(tweet_dir)
-
     
     keywords = ExtractKeyword(tweet['text'])
-    # keywords = ['olay']
     # print(kewwords)
 
     # ExtractEntity(tweet['text'])
@@ -78,7 +76,6 @@ def ProcessTweet(tweet):
     # Search on ebay for sales data
     if len(keywords) > 0:
         ebayapi.SearchEbay(keywords, tweet_dir)
-
 
 if __name__ == '__main__':
     
@@ -95,12 +92,9 @@ if __name__ == '__main__':
         if os.path.isdir(account_dir)==False:
             os.mkdir(account_dir)
 
-        pool.map_async(ProcessTweet, tweets)
-        # for t in tweets:
-            # ProcessTweet(t)
+        for t in tweets:
+            ProcessTweet(t)
             # print(t['created_at'])
             # print(t['retweet_count'])
             # print(t['text'].encode('utf-8'))
 
-    pool.close()
-    pool.join()
