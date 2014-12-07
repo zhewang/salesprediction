@@ -61,16 +61,23 @@ def ExtractImageTag(image_url):
         print('Error in image tagging call: ', response['statusInfo'])
 
 def ProcessTweet(tweet):
+    # make dir for a tweet
+    tweet_dir = './data/'+tweet['user']['screen_name']+'/'+tweet['id_str']
+    if os.path.isdir(tweet_dir) == False:
+        os.mkdir(tweet_dir)
+
+    
+    keywords = ExtractKeyword(tweet['text'])
+    # keywords = ['olay']
+    # print(kewwords)
 
     # ExtractEntity(tweet['text'])
-    keywords = ExtractKeyword(tweet['text'])
-    print(kewwords)
     # ExtractTaxonomy(demo_text)
     # ExtractImageTag(image_url)
 
     # Search on ebay for sales data
     if len(keywords) > 0:
-        SearchEbay(keywords)
+        ebayapi.SearchEbay(keywords, tweet_dir)
 
 
 if __name__ == '__main__':
@@ -82,9 +89,15 @@ if __name__ == '__main__':
     # print(files)
     for f in files:
         tweets = pickle.load(open(f, 'rb'))
-        pool.map_async(ProcessTweet, tweets)
-        # for t in tweets:
-            # ProcessTweet(t)
+
+        # make dir for an account
+        account_dir = './data/'+tweets[0]['user']['screen_name']
+        if os.path.isdir(account_dir)==False:
+            os.mkdir(account_dir)
+
+        # pool.map_async(ProcessTweet, tweets)
+        for t in tweets:
+            ProcessTweet(t)
             # print(t['created_at'])
             # print(t['retweet_count'])
             # print(t['text'].encode('utf-8'))
