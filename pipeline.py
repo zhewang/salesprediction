@@ -3,6 +3,7 @@ import os
 import pickle
 import ebayapi
 import glob
+import argparse
 from multiprocessing import Pool
 from alchemyapi import AlchemyAPI
 
@@ -78,17 +79,23 @@ def ProcessTweet(tweet):
         ebayapi.SearchEbay(keywords, tweet_dir)
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('datapath', help='Path of data files. For example "./data"')
+    args = parser.parse_args()
     
-    dataPath = "./data/"    
+    dataPath = args.datapath
 
     pool = Pool(10)
-    files = glob.glob(dataPath+"*.t")
+    files = glob.glob(dataPath+"/*.t")
     # print(files)
     for f in files:
         tweets = pickle.load(open(f, 'rb'))
 
         # make dir for an account
-        account_dir = './data/'+tweets[0]['user']['screen_name']
+        account_dir = dataPath+'/'+tweets[0]['user']['screen_name']
+        print(account_dir)
+
         if os.path.isdir(account_dir)==False:
             os.mkdir(account_dir)
 
