@@ -61,9 +61,9 @@ def ExtractImageTag(image_url):
     else:
         print('Error in image tagging call: ', response['statusInfo'])
 
-def ProcessTweet(tweet):
+def ProcessTweet(tweet, dataPath):
     # make dir for a tweet
-    tweet_dir = './data/'+tweet['user']['screen_name']+'/'+tweet['id_str']
+    tweet_dir = dataPath+'/'+tweet['user']['screen_name']+'/'+tweet['id_str']
     if os.path.isdir(tweet_dir) == False:
         os.mkdir(tweet_dir)
     
@@ -100,7 +100,7 @@ if __name__ == '__main__':
             os.mkdir(account_dir)
 
         for t in tweets:
-            ProcessTweet(t)
+            ProcessTweet(t, dataPath)
             # print(t['created_at'])
             # print(t['retweet_count'])
             # print(t['text'].encode('utf-8'))
