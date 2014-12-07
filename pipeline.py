@@ -40,13 +40,16 @@ def ExtractKeyword(text):
 def ExtractTaxonomy(text):
     alchemyapi = AlchemyAPI()
 
-    response = alchemyapi.taxonomy('text', demo_text)
+    response = alchemyapi.taxonomy('text', text)
+    results = []
 
     if response['status'] == 'OK':
         for category in response['taxonomy']:
-            print(category['label'], ' : ', category['score'])
+            results.append(category['label'] + ' : ' + category['score'])
     else:
         print('Error in taxonomy call: ', response['statusInfo'])
+
+    return results
 
 
 def ExtractImageTag(image_url):
@@ -68,14 +71,18 @@ def ProcessTweet(tweet, dataPath):
         os.mkdir(tweet_dir)
     
     # save tweet text
-    open(tweet_dir+'/tweet.txt', 'w').write(tweet['text'])
+    tweet_info = open(tweet_dir+'/tweet.txt', 'w')
 
     keywords = ExtractKeyword(tweet['text'])
     # print(kewwords)
 
     # ExtractEntity(tweet['text'])
-    # ExtractTaxonomy(demo_text)
+    category = ExtractTaxonomy(tweet['text'])
     # ExtractImageTag(image_url)
+
+    tweet_info.write(tweet['text'])
+    tweet_info.write(', '.join(keywords))
+    tweet_info.write(', '.join(category))
 
     # Search on ebay for sales data
     if len(keywords) > 0:
@@ -85,9 +92,12 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('datapath', help='Path of data files. For example "./data"')
+    parser.add_argument('limit', default=0, type=int, help='Limit of number of tweets for each account.')
+
     args = parser.parse_args()
     
     dataPath = args.datapath
+    t_limit = args.limit
 
     pool = Pool(10)
     files = glob.glob(dataPath+"/*.t")
@@ -102,8 +112,13 @@ if __name__ == '__main__':
         if os.path.isdir(account_dir)==False:
             os.mkdir(account_dir)
 
-        for t in tweets:
-            ProcessTweet(t, dataPath)
+        if t_limit == 0:
+            for t in tweets:
+                ProcessTweet(t, dataPath)
+        else:
+            maxnumber = min(t_limit, len(tweets))
+            for i in range(maxnumber):
+                ProcessTweet(tweets[i], dataPath)
             # print(t['created_at'])
             # print(t['retweet_count'])
             # print(t['text'].encode('utf-8'))
