@@ -83,6 +83,7 @@ def ProcessTweet(tweet, dataPath):
     tweet_info.write(tweet['text'])
     tweet_info.write(', '.join(keywords))
     tweet_info.write(', '.join(category))
+    tweet_info.close()
 
     # Search on ebay for sales data
     if len(keywords) > 0:

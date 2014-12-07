@@ -35,6 +35,7 @@ def GetSalesData(params):
     if sales_data == None:
         saveFile = open(savePath+'/'+item_id.text+'.txt','w')
         saveFile.write("NODATA\n")
+        saveFile.close()
     else:
         response = requests.get(sales_data['href'], headers=headers)
         soup = BeautifulSoup(response.text.encode('utf-8'))
@@ -50,6 +51,8 @@ def GetSalesData(params):
             for cell in record.find_all('td'):
                 saveFile.write(cell.text+" | ")
             saveFile.write('\n')
+
+        saveFile.close()
 
 def SearchEbay(keywords, savePath):
     item_urls = GetSearchResults(keywords)
