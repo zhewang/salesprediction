@@ -68,8 +68,10 @@ def SearchEbay(keywords, savePath):
         # GetSalesData(url, savePath)
 
     # parallel
-    pool = Pool(10)
+    pool = Pool(50)
     pool.map(GetSalesData, params)
+    pool.close()
+    pool.join()
 
 if __name__ == '__main__':
     keywords = ['test','phone']

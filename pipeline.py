@@ -80,9 +80,9 @@ def ProcessTweet(tweet, dataPath):
     category = ExtractTaxonomy(tweet['text'])
     # ExtractImageTag(image_url)
 
-    tweet_info.write(tweet['text'])
-    tweet_info.write(', '.join(keywords))
-    tweet_info.write(', '.join(category))
+    tweet_info.write(tweet['text']+'\n\n')
+    tweet_info.write(', '.join(keywords)+'\n')
+    tweet_info.write(', '.join(category)+'\n')
     tweet_info.close()
 
     # Search on ebay for sales data
