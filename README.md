@@ -1,18 +1,18 @@
-SalesPrediction
-===============
+#SalesPrediction
+
 Predict sales by analyzing social network data.
 
-Install
-===============
+##Install
+
 The code is implemented using **Python 3**. You also need to install [BeautifulSoup][beautifulSoup] and [Twython][twython]:
 
 `$ pip install beautifulsoup4`
 
 `$ pip install twython`
 
-Get Started
-===============
-##Get data from twitter
+##Get Started
+
+###Get data from twitter
 You need a text file that list all the account you want to fetch. A sample file `sample_list.txt` looks like:
 
 ```
@@ -25,7 +25,7 @@ Then use `fetch_twitter.py` to get data and save to file:
 
 `$ python fetch_twitter.py sample_list.txt`
 
-##Run the pipeline
+###Run the pipeline
 
 After fetching data from twitter, you can run the pipeline with one argument indicating the path to the directory of data files:
 
