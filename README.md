@@ -27,6 +27,11 @@ Then use `fetch_twitter.py` to get data and save to file:
 
 ##Run the pipeline
 
+After fetching data from twitter, you can run the pipeline with one argument indicating the path to the directory of data files:
+
+`$ python pipeline.py ./data`
+
+As most of the work is network I/O intensive, it's better to do parallel computing. We do use multiple processes when searching eaby. However, we don't have time to implement the main logic for each tweets in parallel. Instead, you can divide the twitter data into several sets, like `./data1`, `./data2`, `./data3`, ... . Then you can open several terminals and process each set concurrently.
 
 [beautifulSoup]:http://beautiful-soup-4.readthedocs.org/en/latest/#
 [twython]:https://twython.readthedocs.org/en/latest/
