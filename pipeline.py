@@ -67,6 +67,9 @@ def ProcessTweet(tweet, dataPath):
     if os.path.isdir(tweet_dir) == False:
         os.mkdir(tweet_dir)
     
+    # save tweet text
+    open(tweet_dir+'/tweet.txt', 'w').write(tweet['text'])
+
     keywords = ExtractKeyword(tweet['text'])
     # print(kewwords)
 
