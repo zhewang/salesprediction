@@ -27,7 +27,7 @@ def ExtractKeyword(text):
     results = []
     if response['status'] == 'OK':
         for keyword in response['keywords']:
-            results.append(keyword['text'].encode('utf-8'))
+            results.append(keyword['text'])
             # print('text: ', keyword['text'].encode('utf-8'))
             # print('relevance: ', keyword['relevance'])
     else:
@@ -95,9 +95,9 @@ if __name__ == '__main__':
         if os.path.isdir(account_dir)==False:
             os.mkdir(account_dir)
 
-        # pool.map_async(ProcessTweet, tweets)
-        for t in tweets:
-            ProcessTweet(t)
+        pool.map_async(ProcessTweet, tweets)
+        # for t in tweets:
+            # ProcessTweet(t)
             # print(t['created_at'])
             # print(t['retweet_count'])
             # print(t['text'].encode('utf-8'))
