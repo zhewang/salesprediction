@@ -20,13 +20,17 @@ def GetSearchResults(keywords):
 
     return results
 
-def GetSalesData(item_url, savePath):    
+def GetSalesData(params):
+    item_url = params[0]
+    savePath = params[1]
+    # print(item_url)
+
     response = requests.get(item_url, headers=headers)
     soup = BeautifulSoup(response.text.encode('utf-8'))
 
     sales_data = soup.find('a', href = re.compile(r'http://offer.ebay.com/ws/eBayISAPI.dll\?ViewBidsLogin/*'))
     item_id = soup.find('div', class_='u-flL iti-act-num')
-    print(item_id.text)
+    # print(item_id.text)
 
     if sales_data == None:
         saveFile = open(savePath+'/'+item_id.text+'.txt','w')
@@ -50,16 +54,21 @@ def GetSalesData(item_url, savePath):
 def SearchEbay(keywords, savePath):
     item_urls = GetSearchResults(keywords)
 
+    params = []
+    # prepare parameters
+    for url in item_urls:
+        params.append((url, savePath))
+
     # GetSalesData(item_urls[0])
     # Sequential
-    for url in item_urls:
-        GetSalesData(url, savePath)
+    # for url in item_urls:
+        # GetSalesData(url, savePath)
 
     # parallel
-    # pool = Pool(10)
-    # pool.map_async(GetSalesData, item_urls)
-    # pool.close()
-    # pool.join()
+    pool = Pool(10)
+    pool.map_async(GetSalesData, params)
+    pool.close()
+    pool.join()
 
 if __name__ == '__main__':
     keywords = ['test','phone']
