@@ -25,23 +25,27 @@ def GetSalesData(item_url, savePath):
     soup = BeautifulSoup(response.text.encode('utf-8'))
 
     sales_data = soup.find('a', href = re.compile(r'http://offer.ebay.com/ws/eBayISAPI.dll\?ViewBidsLogin/*'))
+    item_id = soup.find('div', class_='u-flL iti-act-num')
+    print(item_id.text)
 
     if sales_data == None:
-        print("No salse data.")
-        # TODO save this info to file
+        saveFile = open(savePath+'/'+item_id.text+'.txt','w')
+        saveFile.write("NODATA\n")
     else:
         response = requests.get(sales_data['href'], headers=headers)
         soup = BeautifulSoup(response.text.encode('utf-8'))
         sales_list = soup.find_all('tr', attrs={"bgcolor":  re.compile(r"^(#ffffff|#f2f2f2)$")})
 
-        o = urlparse(sales_data['href'])
-        p_dict = parse_qs(o.query)
+        # o = urlparse(sales_data['href'])
+        # p_dict = parse_qs(o.query)
         # print(p_dict['item'][0])
         
-        saveFile = open(savePath+'/'+p_dict['item'][0]+'.txt','w')
-
+        saveFile = open(savePath+'/'+item_id.text+'.txt','w')
+        saveFile.write("HASDATA\n")
         for record in sales_list:
-            saveFile.write(record.find_all('td')[3].text+" "+record.find_all('td')[4].text+'\n')
+            for cell in record.find_all('td'):
+                saveFile.write(cell.text+" | ")
+            saveFile.write('\n')
 
 def SearchEbay(keywords, savePath):
     item_urls = GetSearchResults(keywords)
@@ -58,7 +62,7 @@ def SearchEbay(keywords, savePath):
     # pool.join()
 
 if __name__ == '__main__':
-    keywords = ['olay']
+    keywords = ['test','phone']
     SearchEbay(keywords, './')
 
     
