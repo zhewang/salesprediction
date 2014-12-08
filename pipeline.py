@@ -56,10 +56,12 @@ def ExtractImageTag(image_url):
     alchemyapi = AlchemyAPI()
 
     response = alchemyapi.imageTagging('url', image_url)
+    results = []
 
     if response['status'] == 'OK':
         for keyword in response['imageKeywords']:
-            print(keyword['text'], ' : ', keyword['score'])
+            results.append(keyword['text'])
+            # print(keyword['text'], ' : ', keyword['score'])
         print('')
     else:
         print('Error in image tagging call: ', response['statusInfo'])
@@ -72,6 +74,12 @@ def ProcessTweet(tweet, dataPath):
     
     # save tweet text
     tweet_info = open(tweet_dir+'/tweet.txt', 'w')
+
+    # # get image url
+    # imageTags = []
+    # if 'media' in tweet['entities']:
+    #     imageTags = ExtractImageTag(tweet['entities']['media'][0]['expanded_url'])
+    #     print(imageTags)
 
     keywords = ExtractKeyword(tweet['text'])
     # print(kewwords)
